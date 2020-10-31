@@ -1,5 +1,4 @@
-|:---|---:| 
-|# joshuastough.github.io | <img src="butterfly.png" width="64">|
+# joshuastough.github.io <img src="butterfly.png" width="64">
 
 ### Colab books of [Dr. Joshua Stough](http://joshuastough.com), Bucknell University
 
