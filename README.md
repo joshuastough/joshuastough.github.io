@@ -7,7 +7,7 @@
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/joshuastough/imageprocessing/blob/main/TOC.ipynb)
 
 If you like what you see, please [let me know](mailto:joshua.stough@gmail.com) or 
-<span style="background-color:gold;color:black;">[buy me a coffee](https://www.buymeacoffee.com/joshuastough)</span>.
+[buy me a coffee](https://www.buymeacoffee.com/joshuastough).
 
 
 <br>
