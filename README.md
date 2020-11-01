@@ -7,7 +7,9 @@
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/joshuastough/imageprocessing/blob/main/TOC.ipynb)
 
 
-<img src="butterfly.png" width="40%">
 
+<p style="text-align:center;">
+    <img src="butterfly.png" width="40%">
+</p>
 
 
