@@ -2,7 +2,7 @@
 
 Source for [joshuastough.github.io](https://joshuastough.github.io/), the personal page of Joshua Stough. Its centerpiece is a small image-processing lab: a photo you can sample, quantize, blur, edge-detect, hue-shift, saturate or dither in the browser, with each operation linked to its notebook in [Digital Image Processing in Python](https://profstough.github.io/imageprocessing-awesome/).
 
-The site is a single static `index.html` with inline CSS and JavaScript (no Jekyll; see `.nojekyll`).
+The site is static, with no build step and no Jekyll (see `.nojekyll`). `index.html` holds the words and markup, `assets/site.css` the styles, and `assets/lab/lab.js` the lab. After changing a CSS or JS file, bump the `?v=` number where `index.html` loads it, so browsers don't keep using a cached copy.
 
 - `assets/lab/pictures.js`: the lab's pictures. One is picked at random on each visit, and so is the starting operation. Preview a picture with `?img=N` or `?img=word`, and an operation with `?op=dither&v=4`.
 - `assets/lab/*.webp`: the pictures, at most 900px, with all metadata (including GPS) stripped. `assets/butterfly.webp` comes from `butterfly.png`, the full-resolution original.
