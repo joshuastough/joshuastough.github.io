@@ -7,6 +7,7 @@ The site is a single static `index.html` with inline CSS and JavaScript (no Jeky
 - `assets/lab/pictures.js`: the lab's pictures. One is picked at random on each visit, and so is the starting operation. Preview a picture with `?img=N` or `?img=word`, and an operation with `?op=dither&v=4`.
 - `assets/lab/*.webp`: the pictures, at most 900px, with all metadata (including GPS) stripped. `assets/butterfly.webp` comes from `butterfly.png`, the full-resolution original.
 - `assets/social.jpg`: the link-preview image.
+- `sitemap.xml` and `robots.txt`: for search engines; the sitemap lists only the home page.
 
 ### Adding a picture
 Put the original photo in `originals/`. Git ignores that folder, so originals and their GPS data never get committed. Then run
