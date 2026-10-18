@@ -257,6 +257,7 @@
 
     .stage canvas {
       display: none;
+      max-height: none; /* the script sizes the canvas to fit, in whole device pixels */
       cursor: ew-resize;
     }
 
@@ -724,7 +725,7 @@
       var OPS = [
         {
           id: 'original', label: 'Original',
-          text: 'The photograph as taken: {size} pixels, 8 bits per color channel.'
+          text: 'The photograph at {size} pixels, one per pixel of your screen, 8 bits per color channel.'
         },
         {
           id: 'sampling', label: 'Sampling', name: 'Block', min: 2, max: 40, step: 1, value: 12, unit: ' px',
@@ -1064,16 +1065,42 @@
 
       /* ---------- Start once the photo has loaded ---------- */
 
-      function init() {
-        W = photo.naturalWidth; H = photo.naturalHeight; N = W * H;
-        canvas.width = W; canvas.height = H;
+      /* ---------- Working image: one pixel per screen pixel ---------- */
+
+      // The picture is processed at the size it is shown, in device pixels, so each processed
+      // pixel lands on exactly one screen pixel. Letting the browser shrink a larger result would
+      // resample dither dots, edge lines and block borders into moire.
+      var frame = stage.parentNode, fitted = '', refit = 0, MAX_WORK = 1600;
+
+      function fit() {
+        var dpr = window.devicePixelRatio || 1;
+        var cs = getComputedStyle(frame);
+        // Exact (fractional) content width: clientWidth rounds, and a canvas even 0.2px too wide gets squeezed.
+        var availW = frame.getBoundingClientRect().width - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight) -
+          parseFloat(cs.borderLeftWidth) - parseFloat(cs.borderRightWidth);
+        var availH = Math.min(innerHeight * 0.78, 720);
+        var nw = photo.naturalWidth, nh = photo.naturalHeight;
+        var cssW = Math.min(availW, nw, availH * nw / nh);
+        var w = Math.max(1, Math.min(MAX_WORK, Math.floor(cssW * dpr)));
+        var h = Math.max(1, Math.floor(w * nh / nw));
+        var key = w + 'x' + h + '@' + dpr;
+        if (key === fitted) return false;
+
+        canvas.width = w;
+        canvas.height = h;
+        canvas.style.width = w / dpr + 'px';
+        canvas.style.height = h / dpr + 'px';
         ctx = canvas.getContext('2d', { willReadFrequently: true });
-        ctx.drawImage(photo, 0, 0);
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = 'high';
+        ctx.drawImage(photo, 0, 0, w, h);
         try {
-          src = ctx.getImageData(0, 0, W, H);
+          src = ctx.getImageData(0, 0, w, h);
         } catch (e) {
-          return; // e.g. opened from file://; keep the plain picture
+          return false; // e.g. opened from file://; keep the plain picture
         }
+        W = w; H = h; N = w * h;
+        fitted = key;
         out = ctx.createImageData(W, H);
         lum = new Float32Array(N);
         err = new Float32Array(N);
@@ -1094,6 +1121,24 @@
             smooth[y * W + x] = sum / 9;
           }
         }
+        return true;
+      }
+
+      // Window resizes, zoom and rotation change the shown size: re-fit and reprocess.
+      function onResize() {
+        clearTimeout(refit);
+        refit = setTimeout(function () {
+          if (stage.classList.contains('ready') && fit()) {
+            describe();
+            schedule(1);
+          }
+        }, 120);
+      }
+
+      function init() {
+        if (!fit()) return;
+        addEventListener('resize', onResize);
+        if (window.ResizeObserver) new ResizeObserver(onResize).observe(frame);
         stage.classList.add('ready');
         document.getElementById('controls').hidden = false;
         var w = parseFloat(query.get('wipe'));
