@@ -2,7 +2,7 @@
 
 Usage: python3 -I tools/shoot.py OUTDIR [PATH ...] [--base URL] [--nojs] [--viewport]
 
-Needs tools/serve.sh running. Each PATH (default: the prototypes) is shot at
+Needs tools/serve.sh running. Each PATH (default: index.html) is shot at
 desktop (1280x900) and phone (390x844) width, in light and dark color schemes
 (emulated prefers-color-scheme), as a full-page PNG in OUTDIR. --viewport shoots
 only the first screen instead of the full page; --nojs turns JavaScript off.
@@ -21,12 +21,7 @@ import urllib.request
 
 import websocket
 
-DEFAULT_PATHS = [
-    "prototypes/index.html",
-    "prototypes/swiss.html",
-    "prototypes/terminal.html",
-    "prototypes/lab.html",
-]
+DEFAULT_PATHS = ["index.html"]
 SIZES = {"desktop": (1280, 900, False), "phone": (390, 844, True)}
 SETTLE_JS = """new Promise(r => document.fonts.ready.then(() =>
   requestAnimationFrame(() => requestAnimationFrame(() => setTimeout(r, 400)))))"""
@@ -87,7 +82,7 @@ class Chrome:
 
 
 def slug(path, size, scheme):
-    name = re.sub(r"[^A-Za-z0-9]+", "-", path.replace("prototypes/", "").replace(".html", ""))
+    name = re.sub(r"[^A-Za-z0-9]+", "-", path.replace(".html", ""))
     return f"{name.strip('-')}_{size}_{scheme}.png"
 
 

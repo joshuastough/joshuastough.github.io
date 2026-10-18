@@ -1,20 +1,22 @@
-## Colab books of [Dr. Joshua Stough](http://joshuastough.com), Bucknell University
+## joshuastough.github.io
 
-***Neither of these books is ready for showtime yet! Please come back later.***
+Source for [joshuastough.github.io](https://joshuastough.github.io/), the personal page of Joshua Stough. Its centerpiece is a small image-processing lab: a photo you can sample, quantize, blur, edge-detect, hue-shift, saturate or dither in the browser, with each operation linked to its notebook in [Digital Image Processing in Python](https://profstough.github.io/imageprocessing-awesome/).
 
-- [Python Structures (CS2)](https://joshuastough.github.io/pythonstructures/)  
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/joshuastough/pythonstructures/blob/main/TOC.ipynb)
+The site is a single static `index.html` with inline CSS and JavaScript (no Jekyll; see `.nojekyll`).
 
-- [Image Processing](https://joshuastough.github.io/imageprocessing/)  
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/joshuastough/imageprocessing/blob/main/TOC.ipynb)
+- `assets/lab/pictures.js`: the lab's pictures. One is picked at random on each visit, and so is the starting operation. Preview a picture with `?img=N` or `?img=word`, and an operation with `?op=dither&v=4`.
+- `assets/lab/*.webp`: the pictures, at most 900px, with all metadata (including GPS) stripped. `assets/butterfly.webp` comes from `butterfly.png`, the full-resolution original.
+- `assets/social.jpg`: the link-preview image.
 
-If you like what you see, please [let me know](mailto:joshua.stough@gmail.com) or 
-[buy me a coffee](https://www.buymeacoffee.com/joshuastough).
+### Adding a picture
+Put the original photo in `originals/`. Git ignores that folder, so originals and their GPS data never get committed. Then run
 
+```sh
+python3 -I tools/add_picture.py originals/PHOTO.jpg --name short-name
+```
 
-<br>
-<p style="text-align:center;">
-    <img src="butterfly.png" width="40%">
-</p>
+and paste the entry it prints into `assets/lab/pictures.js`, adding alt text and a caption.
 
-
+### Previewing
+- `tools/serve.sh` serves the site at http://localhost:8000/.
+- `python3 -I tools/shoot.py OUTDIR` takes headless-Chrome screenshots at desktop and phone widths, in light and dark, and flags horizontal overflow.

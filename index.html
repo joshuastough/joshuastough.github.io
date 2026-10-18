@@ -4,10 +4,20 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="robots" content="noindex">
   <title>Joshua Stough</title>
   <meta name="description"
-    content="Joshua Stough, computer scientist working on medical image analysis, and teaching everything from logic gates to neural networks.">
+    content="Joshua Stough, computer scientist: medical image analysis, teaching from logic gates to neural networks, and an image-processing lab you can play with in your browser.">
+  <link rel="canonical" href="https://joshuastough.github.io/">
+
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://joshuastough.github.io/">
+  <meta property="og:title" content="Joshua Stough">
+  <meta property="og:description"
+    content="Medical image analysis, teaching from logic gates to neural networks, and an image-processing lab you can play with.">
+  <meta property="og:image" content="https://joshuastough.github.io/assets/social.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
   <link rel="icon"
     href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🦋</text></svg>">
   <script>
@@ -17,9 +27,9 @@
       if (t === 'dark' || t === 'light') document.documentElement.dataset.theme = t;
       document.documentElement.classList.add('js');
     })();
-    var LAB_ROOT = '../'; // path from this page to the site root
+    var LAB_ROOT = ''; // path from this page to the site root
   </script>
-  <script src="../assets/lab/pictures.js"></script>
+  <script src="assets/lab/pictures.js"></script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -654,7 +664,7 @@
                 img.src = LAB_ROOT + pick.src;
               })();
             </script>
-            <noscript><img src="../assets/butterfly.webp" width="900" height="736"
+            <noscript><img src="assets/butterfly.webp" width="900" height="736"
                 alt="An orange and black butterfly resting on a gray panel with rectangular cutouts showing green leaves"></noscript>
             <canvas id="canvas" width="900" height="736" role="img"></canvas>
             <span class="tag left" id="tag-left">Original</span>
