@@ -1044,10 +1044,12 @@
         document.getElementById('controls').hidden = false;
         var w = parseFloat(query.get('wipe'));
         setWipe(isNaN(w) ? wipe : w);
-        // Start with the picture's own operation unless the address asks for one.
+        // Start with the operation the address asks for, else the picture's pinned one, else a random one.
         var qop = query.get('op'), qv = parseFloat(query.get('v'));
+        var processed = OPS.filter(function (o) { return o.id !== 'original'; });
         if (qop) select(qop, qv);
-        else select(pick.op || 'edges', isNaN(qv) ? pick.v : qv);
+        else if (pick.op) select(pick.op, isNaN(qv) ? pick.v : qv);
+        else select(processed[Math.floor(Math.random() * processed.length)].id);
       }
 
       if (photo.complete && photo.naturalWidth) init();
