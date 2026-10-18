@@ -34,7 +34,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
-    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap"
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap"
     rel="stylesheet">
 
   <style>
@@ -99,7 +99,9 @@
         linear-gradient(90deg, var(--grid) 1px, transparent 1px);
       background-size: 24px 24px;
       color: var(--ink);
-      font: 400 17px/1.6 "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+      font: 400 17px/1.6 "Newsreader", Georgia, "Times New Roman", serif;
+      /* Newsreader's x-height is small; match Plex Mono's so the two read at the same size. */
+      font-size-adjust: 0.516;
     }
 
     a {
@@ -225,9 +227,10 @@
 
     h1 {
       font-size: clamp(2.4rem, 5.2vw, 3.8rem);
-      font-weight: 600;
+      font-size-adjust: none;
+      font-weight: 500;
       line-height: 1.04;
-      letter-spacing: -0.025em;
+      letter-spacing: -0.015em;
     }
 
     .lede {
@@ -503,7 +506,7 @@
 
     .card h3 {
       font-size: clamp(1.5rem, 2.6vw, 2rem);
-      font-weight: 600;
+      font-weight: 500;
       line-height: 1.15;
       letter-spacing: -0.015em;
       margin-bottom: 12px;
