@@ -23,7 +23,7 @@
       slug: 'color-quantization', chapter: 'Color Quantization'
     },
     {
-      id: 'blur', label: 'Blur', name: 'Radius', min: 1, max: 16, step: 1, value: 5, unit: ' px',
+      id: 'blur', label: 'Blur', name: 'Radius', min: 0, max: 16, step: 1, value: 5, unit: ' px',
       text: 'Each pixel averaged with its neighbors (three box passes, close to a Gaussian): a low-pass filter.',
       slug: 'imfilter-lowpass-demo', chapter: 'Spatial filtering, low pass'
     },
@@ -69,6 +69,7 @@
 
   var query = new URLSearchParams(location.search);
   var pick = window.LAB_PICK;
+  if (pick) figtext.textContent = pick.caption; // the page's text is the butterfly's, for no-JS visitors
   var W, H, N, ctx, src, out, lum, smooth, bufA, bufB, err;
   var op = OPS[4], value = op.value, wipe = 0.5, pending = 0, dragging = false;
 
@@ -103,6 +104,7 @@
 
     blur: function (r) {
       var s = src.data, o = out.data, i, p;
+      if (r === 0) { o.set(s); return; } // radius 0: each pixel is its own average
       for (i = 0, p = 0; i < N; i++, p += 4) {
         bufA[i * 3] = s[p]; bufA[i * 3 + 1] = s[p + 1]; bufA[i * 3 + 2] = s[p + 2];
       }
@@ -288,8 +290,8 @@
       tagRight.textContent = op.label;
     }
     describe();
-    figtext.textContent = plain ? pick.caption :
-      'Left of the divider: the original. Right: ' + op.label.toLowerCase() + '.';
+    figtext.textContent = pick.caption + (plain ? '' :
+      ' Left of the divider: the original. Right: ' + op.label.toLowerCase() + '.');
     canvas.setAttribute('aria-label', plain ? pick.alt :
       pick.alt + ', with ' + op.label.toLowerCase() + ' applied right of a divider at ' +
       Math.round(wipe * 100) + ' percent');
