@@ -725,7 +725,7 @@
       var OPS = [
         {
           id: 'original', label: 'Original',
-          text: 'The photograph at {size} pixels, one per pixel of your screen, 8 bits per color channel.'
+          text: 'The photograph as it is, before any processing.'
         },
         {
           id: 'sampling', label: 'Sampling', name: 'Block', min: 2, max: 40, step: 1, value: 12, unit: ' px',
@@ -973,7 +973,7 @@
       /* ---------- Controls ---------- */
 
       function describe() {
-        caption.textContent = op.text.replace('{size}', W + ' \u00d7 ' + H) + ' ' +
+        caption.textContent = op.text + ' ' +
           (op.detail ? op.detail(value) + ' ' : '');
         if (op.slug) {
           var a = document.createElement('a');
@@ -1128,10 +1128,7 @@
       function onResize() {
         clearTimeout(refit);
         refit = setTimeout(function () {
-          if (stage.classList.contains('ready') && fit()) {
-            describe();
-            schedule(1);
-          }
+          if (stage.classList.contains('ready') && fit()) schedule(1);
         }, 120);
       }
 
