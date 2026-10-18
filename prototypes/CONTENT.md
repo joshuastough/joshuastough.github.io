@@ -8,9 +8,9 @@ Edit here first, then carry the change into each page.
 Computer scientist working on medical image analysis, and teaching everything from logic gates to neural networks.
 
 ## Bio
-I'm Joshua Stough, a computer scientist and teacher. At Bucknell University I teach systems, from logic gates
-up to operating systems, and electives in image processing, computer vision and machine learning. My research
-applies machine learning to medical images, most recently ultrasound, usually with undergraduate collaborators.
+I'm Joshua Stough, a computer scientist and teacher at Bucknell University. I teach systems courses, from logic gates
+through operating systems, and electives in image processing, computer vision and machine learning. My research
+applies machine learning to medical images, most recently ultrasound and histopathology, usually with undergraduate collaborators.
 
 ## Featured: open textbook
 **Digital Image Processing in Python**
