@@ -36,5 +36,25 @@ var LAB_PICTURES = [
     src: 'assets/lab/dogwood-sky.webp', w: 900, h: 678,
     alt: 'Looking up through the white blossoms and green leaves of a flowering dogwood into a blue sky',
     caption: 'Dogwood in bloom, looking up.'
+  },
+  {
+    src: 'assets/lab/grand-canyon-trail.webp', w: 900, h: 424,
+    alt: 'A red dirt trail edged with green shrubs and a pine, looking down a side canyon of red and tan cliffs toward a green valley floor',
+    caption: 'On the trail into the Grand Canyon.'
+  },
+  {
+    src: 'assets/lab/park-bench.webp', w: 900, h: 548,
+    alt: 'A green bench at the end of a sunlit gravel path, under tall trees in bright green and copper-red leaf, with white-flowering shrubs in front',
+    caption: 'A park bench in early summer.'
+  },
+  {
+    src: 'assets/lab/chubby-sodas.webp', w: 900, h: 538,
+    alt: 'A heap of small, round Chubby soda bottles in yellow, red, orange and cola brown, with green, red and purple caps and cartoon labels',
+    caption: 'A bin of Chubby sodas.'
+  },
+  {
+    src: 'assets/lab/sunset-la-jolla.webp', w: 900, h: 678,
+    alt: 'The sun low over the Pacific, its reflection on the waves, seen past a mound of succulents and sandstone rocks above the beach',
+    caption: 'Sunset at La Jolla.'
   }
 ];
