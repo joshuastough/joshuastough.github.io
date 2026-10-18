@@ -1044,7 +1044,10 @@
         document.getElementById('controls').hidden = false;
         var w = parseFloat(query.get('wipe'));
         setWipe(isNaN(w) ? wipe : w);
-        select(query.get('op') || 'edges', parseFloat(query.get('v')));
+        // Start with the picture's own operation unless the address asks for one.
+        var qop = query.get('op'), qv = parseFloat(query.get('v'));
+        if (qop) select(qop, qv);
+        else select(pick.op || 'edges', isNaN(qv) ? pick.v : qv);
       }
 
       if (photo.complete && photo.naturalWidth) init();
