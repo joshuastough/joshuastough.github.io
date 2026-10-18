@@ -5,7 +5,7 @@
 // and paste the entry it prints here, with alt text and a caption.
 // src is relative to the site root; w and h are the webp's pixel size.
 // The starting operation is random too. To pin one for a picture, add op (sampling, quantize,
-// blur, edges, hue or dither) and optionally v, its slider value. ?op= and ?v= override both.
+// blur, edges, hue, saturation or dither) and optionally v, its slider value. ?op= and ?v= override both.
 var LAB_PICTURES = [
   {
     src: 'assets/butterfly.webp', w: 900, h: 736,
