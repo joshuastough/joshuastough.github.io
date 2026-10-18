@@ -1,0 +1,874 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Joshua Stough</title>
+  <meta name="description"
+    content="Joshua Stough, computer scientist working on medical image analysis, and teaching everything from logic gates to neural networks.">
+  <link rel="icon"
+    href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🦋</text></svg>">
+  <script>
+    // ?theme=dark|light overrides the system color scheme (used for previews).
+    (function () {
+      var t = new URLSearchParams(location.search).get('theme');
+      if (t === 'dark' || t === 'light') document.documentElement.dataset.theme = t;
+      document.documentElement.classList.add('js');
+    })();
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* Paper terminal (light) */
+    :root {
+      --bg: #ece8dc;
+      --panel: #faf8f2;
+      --chrome: #e4dfd0;
+      --rule: #d3ccb9;
+      --ink: #1f2a22;
+      --dim: #5c665e;
+      --prompt: #17703a;
+      --path: #1f4f99;
+      --link: #8a4600;
+      --orange: #b4500b;
+      --green: #3d7a1d;
+      --chip: #f1ede2;
+      --glow: none;
+      --shadow: 0 1px 2px rgba(60, 50, 20, 0.08), 0 24px 48px -24px rgba(60, 50, 20, 0.35);
+      color-scheme: light;
+    }
+
+    /* Phosphor (dark) */
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --bg: #070908;
+        --panel: #0d110f;
+        --chrome: #151b17;
+        --rule: #222c25;
+        --ink: #d3e4d1;
+        --dim: #8b9d8d;
+        --prompt: #7ee08a;
+        --path: #82b9ff;
+        --link: #f5b94e;
+        --orange: #ff9d4d;
+        --green: #8fd16a;
+        --chip: #131a16;
+        --glow: 0 0 8px rgba(126, 224, 138, 0.28);
+        --shadow: 0 0 0 1px rgba(126, 224, 138, 0.04), 0 24px 60px -20px rgba(0, 0, 0, 0.8);
+        color-scheme: dark;
+      }
+    }
+
+    :root[data-theme="dark"] {
+      --bg: #070908;
+      --panel: #0d110f;
+      --chrome: #151b17;
+      --rule: #222c25;
+      --ink: #d3e4d1;
+      --dim: #8b9d8d;
+      --prompt: #7ee08a;
+      --path: #82b9ff;
+      --link: #f5b94e;
+      --orange: #ff9d4d;
+      --green: #8fd16a;
+      --chip: #131a16;
+      --glow: 0 0 8px rgba(126, 224, 138, 0.28);
+      --shadow: 0 0 0 1px rgba(126, 224, 138, 0.04), 0 24px 60px -20px rgba(0, 0, 0, 0.8);
+      color-scheme: dark;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    html {
+      -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font: 400 15px/1.6 "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+    }
+
+    a {
+      color: var(--link);
+      text-decoration: underline;
+      text-decoration-thickness: 1px;
+      text-underline-offset: 3px;
+    }
+
+    a:hover {
+      text-decoration-style: dashed;
+    }
+
+    :focus-visible {
+      outline: 2px solid var(--link);
+      outline-offset: 2px;
+    }
+
+    p,
+    h1,
+    ul,
+    figure {
+      margin: 0;
+    }
+
+    /* Window */
+    .term {
+      max-width: 940px;
+      margin: clamp(0px, 4vw, 48px) auto 0;
+      background: var(--panel);
+      border: 1px solid var(--rule);
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .bar {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 10px 14px;
+      background: var(--chrome);
+      border-bottom: 1px solid var(--rule);
+      color: var(--dim);
+      font-size: 13px;
+    }
+
+    .dots {
+      display: flex;
+      gap: 7px;
+    }
+
+    .dots i {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--rule);
+    }
+
+    .bar .title {
+      flex: 1;
+      text-align: center;
+      margin-right: 54px;
+    }
+
+    .screen {
+      padding: 22px clamp(14px, 3vw, 28px) 28px;
+      cursor: text;
+    }
+
+    .motd {
+      color: var(--dim);
+      margin-bottom: 18px;
+    }
+
+    .cmd {
+      margin-bottom: 22px;
+    }
+
+    .line {
+      word-break: break-word;
+    }
+
+    .ps1 {
+      color: var(--prompt);
+      font-weight: 700;
+      text-shadow: var(--glow);
+    }
+
+    .cwd {
+      color: var(--path);
+      font-weight: 700;
+    }
+
+    .typed {
+      color: var(--ink);
+    }
+
+    .out {
+      margin-top: 6px;
+      max-width: 72ch;
+    }
+
+    .out p+p {
+      margin-top: 8px;
+    }
+
+    .dim {
+      color: var(--dim);
+    }
+
+    h1 {
+      font-size: inherit;
+      font-weight: 700;
+    }
+
+    /* ASCII art: 60 columns, scaled to fit the screen */
+    .art {
+      margin: 8px 0 6px;
+      font-size: min(14px, calc((100vw - 64px) / 36));
+      line-height: 1.1;
+      letter-spacing: 0;
+      color: var(--ink);
+      opacity: 0.9;
+    }
+
+    .art .o {
+      color: var(--orange);
+      opacity: 1;
+    }
+
+    .art .g {
+      color: var(--green);
+    }
+
+    /* ls -l ~/projects */
+    .entry .perm {
+      color: var(--dim);
+    }
+
+    .entry .dir {
+      color: var(--path);
+      font-weight: 700;
+    }
+
+    .indent {
+      padding-left: 2ch;
+      margin-top: 4px;
+      border-left: 1px dashed var(--rule);
+      margin-left: 1ch;
+    }
+
+    .indent p {
+      margin-top: 4px;
+    }
+
+    /* cat links.txt */
+    .kv {
+      list-style: none;
+      padding: 0;
+      display: grid;
+      grid-template-columns: 11ch minmax(0, max-content) minmax(0, 1fr);
+      column-gap: 2ch;
+      row-gap: 2px;
+    }
+
+    .kv li {
+      display: contents;
+    }
+
+    .kv .k {
+      color: var(--dim);
+    }
+
+    .help {
+      list-style: none;
+      padding: 0;
+      display: grid;
+      grid-template-columns: 20ch minmax(0, 1fr);
+      column-gap: 2ch;
+    }
+
+    .help li {
+      display: contents;
+    }
+
+    .help .note {
+      color: var(--dim);
+    }
+
+    .kv .note {
+      color: var(--dim);
+    }
+
+    /* Live prompt */
+    .prompt {
+      display: none;
+      align-items: baseline;
+      flex-wrap: wrap;
+      column-gap: 1ch;
+    }
+
+    .js .prompt {
+      display: flex;
+    }
+
+    .js .static-cursor,
+    .js-only {
+      display: none;
+    }
+
+    .js .js-only {
+      display: inline;
+    }
+
+    .prompt input {
+      flex: 1;
+      min-width: 12ch;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      color: var(--ink);
+      font: inherit;
+      caret-color: var(--prompt);
+      outline: none;
+    }
+
+    .cursor {
+      display: inline-block;
+      width: 0.62em;
+      height: 1.15em;
+      vertical-align: -0.2em;
+      background: var(--prompt);
+      animation: blink 1.1s steps(1) infinite;
+    }
+
+    @keyframes blink {
+      50% {
+        opacity: 0;
+      }
+    }
+
+    .cleared {
+      display: none;
+    }
+
+    .err {
+      color: var(--orange);
+    }
+
+    .cols {
+      display: flex;
+      flex-wrap: wrap;
+      column-gap: 3ch;
+    }
+
+    .linklike {
+      padding: 0;
+      border: 0;
+      background: none;
+      color: var(--link);
+      font: inherit;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      cursor: pointer;
+    }
+
+    /* Command chips under the window */
+    .chips {
+      display: none;
+      max-width: 940px;
+      margin: 14px auto 0;
+      padding: 0 clamp(14px, 3vw, 0px);
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .js .chips {
+      display: flex;
+    }
+
+    .chips button {
+      padding: 6px 12px;
+      border: 1px solid var(--rule);
+      border-radius: 8px;
+      background: var(--chip);
+      color: var(--ink);
+      font: inherit;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .chips button:hover {
+      border-color: var(--prompt);
+      color: var(--prompt);
+    }
+
+    .chips button::before {
+      content: "$ ";
+      color: var(--dim);
+    }
+
+    footer {
+      max-width: 940px;
+      margin: 18px auto 40px;
+      padding: 0 clamp(14px, 3vw, 0px);
+      color: var(--dim);
+      font-size: 13px;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+    }
+
+    @media (max-width: 640px) {
+      body {
+        font-size: 14px;
+      }
+
+      .term {
+        border-radius: 0;
+        border-left: 0;
+        border-right: 0;
+      }
+
+      .bar .title {
+        margin-right: 0;
+        text-align: right;
+      }
+
+      .kv {
+        grid-template-columns: 9ch minmax(0, 1fr);
+      }
+
+      .kv .note {
+        grid-column: 2;
+        margin-bottom: 6px;
+      }
+
+      .help {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .help .note {
+        padding-left: 2ch;
+        margin-bottom: 4px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .cursor {
+        animation: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="term" aria-label="Terminal">
+    <div class="bar" aria-hidden="true">
+      <span class="dots"><i></i><i></i><i></i></span>
+      <span class="title">jvs@stough: ~ &mdash; bash</span>
+    </div>
+
+    <div class="screen" id="screen">
+      <p class="motd" id="motd">Last login: just now on ttys001</p>
+
+      <div id="history">
+        <section class="cmd">
+          <p class="line"><span class="ps1">jvs@stough</span>:<span class="cwd">~</span>$ <span
+              class="typed">whoami</span></p>
+          <div class="out" data-out="whoami">
+            <h1>Joshua Stough</h1>
+            <p class="dim">Computer scientist working on medical image analysis, and teaching everything from logic
+              gates to neural networks.</p>
+          </div>
+        </section>
+
+        <section class="cmd">
+          <p class="line"><span class="ps1">jvs@stough</span>:<span class="cwd">~</span>$ <span class="typed">cat
+              about.txt</span></p>
+          <div class="out" data-out="about">
+            <p>I'm Joshua Stough, a computer scientist and teacher. At Bucknell University I teach systems, from logic
+              gates up to operating systems, and electives in image processing, computer vision and machine learning.
+              My research applies machine learning to medical images, most recently ultrasound, usually with
+              undergraduate collaborators.</p>
+          </div>
+        </section>
+
+        <section class="cmd">
+          <p class="line"><span class="ps1">jvs@stough</span>:<span class="cwd">~</span>$ <span class="typed">cat
+              butterfly.png | ascii</span></p>
+          <figure class="out" data-out="ascii">
+            <!-- Built by: python3 -I tools/ascii_art.py assets/butterfly.webp prototypes/terminal.html --cols 60 --crop 250,290,770,680 -->
+            <pre class="art" aria-hidden="true"><!-- ascii-art -->                         .%#@@@@%:
+                       =@@@<span class="o">#*--=#</span>@+
+                      <span class="o">;-:,,,.....;</span>@-.
+                       <span class="o">.;:..</span>   <span class="o">.+=</span>#=-*@@@#:.
+              ,;-<span class="o">.</span>  <span class="o">;;</span>  <span class="o">.,,:;,,</span> <span class="o">.=</span>+*@-<span class="o">+</span>@@@+%@+:
+     .      ,+@<span class="o">*,.:</span>  <span class="o">:+.</span> <span class="o">-;=::,=-</span> +% <span class="o">,-,+;-;</span>@@@%
+  :      <span class="o">.</span> ;@%<span class="o">-..:.,:</span> <span class="o">.</span>%:.<span class="o">=</span>=<span class="o">=-++</span>-+<span class="o">#</span>@<span class="o">-</span> <span class="o">,;:</span> <span class="o">,*</span>*@@@+..
+  ,<span class="o">+;</span>.=<span class="o">*.</span> @@<span class="o">*,.</span>   <span class="o">.,;-</span>.,%#+****+<span class="o">**--.;,*</span>@  <span class="o">%</span>@@@*;:::.
+    +=   :@<span class="o">%.</span>    <span class="o">,,,;;</span>++=*#=****<span class="o">*+*#</span> <span class="o">-</span>#@@#;#+-;;:::,,,    <span class="g">+</span>%
+      .  <span class="g">:</span>@*  <span class="o">,</span>  <span class="o">..,;+</span>*+*=#%#*<span class="o">==+++</span>==:,<span class="g">;</span>.;-;;;;::::,,,,.
+          -@<span class="o">*,=*</span>  <span class="o">*;*</span>****<span class="o">*+</span>*%*=---------;;;;;:::::,,,,,.
+           .#**<span class="o">+**#:**+++-</span>==;:----;;;;;;;;:;:::,,,,,,,.
+         .%@%<span class="o">:=</span>  <span class="o">*#:-++--</span>-=---;;;;;;::::::::::,,,,,,,
+         *@@@<span class="o">;,.,.::</span> <span class="o">;=</span>--=----;;:::::::::::::,,::,.
+         ##<span class="o">+#,;,@++</span>#%#=----;;;;::::::::, .,,..
+         %%-<span class="o">:+</span>   <span class="o">:</span>@%+---;;;;::::::,,,.:,,
+         @@@##@<span class="o">*=</span>-+---;;;;:::::::,,,,
+         ;@@@@@#=-;;--;;:;;:::,,,,,,
+           :;,;;;;;;;;;::;;::,.<span class="g">.</span>                         .
+       <span class="g">:;,.</span>    :;:::;:::::,,,                            <span class="g">,,.</span>
+  ;%*   <span class="g">:*==+;</span>  ,:::::::::,,,                             <span class="g">.:</span>
+      ;<span class="g">-..=--;</span>    :,,::,,,,.                              <span class="g">.:</span><!-- /ascii-art --></pre>
+            <figcaption class="dim"># An orange and black butterfly resting on a gray panel with rectangular cutouts
+              showing green leaves</figcaption>
+          </figure>
+        </section>
+
+        <section class="cmd">
+          <p class="line"><span class="ps1">jvs@stough</span>:<span class="cwd">~</span>$ <span class="typed">ls -l
+              ~/projects</span></p>
+          <div class="out" data-out="projects">
+            <p class="entry"><span class="perm">drwxr-xr-x jvs</span> <a class="dir"
+                href="https://profstough.github.io/imageprocessing-awesome/">dip-with-python/</a></p>
+            <div class="indent">
+              <p><strong>Digital Image Processing in Python</strong></p>
+              <p class="dim">An open, interactive textbook: every section is a Jupyter notebook you can run, change and
+                break, from sampling and color to compression, segmentation and neural networks. Free under CC BY-SA
+                4.0.</p>
+              <p>&rarr; <a href="https://profstough.github.io/imageprocessing-awesome/">read online</a>
+                &middot; <a
+                  href="https://colab.research.google.com/github/profstough/imageprocessing-awesome/blob/main/colab_setup.ipynb">open
+                  in colab</a>
+                &middot; <a href="https://github.com/profstough/imageprocessing-awesome">source</a></p>
+            </div>
+          </div>
+        </section>
+
+        <section class="cmd">
+          <p class="line"><span class="ps1">jvs@stough</span>:<span class="cwd">~</span>$ <span class="typed">cat
+              links.txt</span></p>
+          <div class="out" data-out="links">
+            <ul class="kv">
+              <li><span class="k">teaching</span><a href="https://profstough.github.io/">profstough.github.io</a><span
+                  class="note"># courses and open materials</span></li>
+              <li><span class="k">research</span><a href="https://joshuastough.com">joshuastough.com</a><span
+                  class="note"># medical image analysis, students, CV</span></li>
+              <li><span class="k">scholar</span><a
+                  href="https://scholar.google.com/citations?user=JASM_10AAAAJ&amp;hl=en">Google Scholar</a><span
+                  class="note"># publications</span></li>
+              <li><span class="k">github</span><a href="https://github.com/joshuastough">@joshuastough</a><span
+                  class="note"># personal projects</span></li>
+              <li><span class="k">github</span><a href="https://github.com/profstough">@profstough</a><span
+                  class="note"># teaching materials</span></li>
+              <li><span class="k">email</span><a
+                  href="mailto:joshua.stough@gmail.com">joshua.stough@gmail.com</a><span class="note"></span></li>
+              <li><span class="k">coffee</span><a href="https://www.buymeacoffee.com/joshuastough">buy me a
+                  coffee</a><span class="note"># if you like what you see</span></li>
+            </ul>
+          </div>
+        </section>
+      </div>
+
+      <div id="log" aria-live="polite"></div>
+
+      <form class="prompt" id="prompt" autocomplete="off">
+        <label for="cmd"><span class="ps1">jvs@stough</span>:<span class="cwd">~</span>$<span class="sr-only">
+            Type a command, for example help</span></label>
+        <input id="cmd" name="cmd" type="text" autocapitalize="off" autocorrect="off" spellcheck="false"
+          enterkeyhint="go">
+      </form>
+      <p class="static-cursor"><span class="ps1">jvs@stough</span>:<span class="cwd">~</span>$ <span class="cursor"
+          aria-hidden="true"></span></p>
+    </div>
+  </main>
+
+  <nav class="chips" aria-label="Commands">
+    <button type="button" data-run="help">help</button>
+    <button type="button" data-run="ls">ls</button>
+    <button type="button" data-run="open book">open book</button>
+    <button type="button" data-run="open research">open research</button>
+    <button type="button" data-run="coffee">coffee</button>
+    <button type="button" data-run="theme">theme</button>
+    <button type="button" data-run="clear">clear</button>
+  </nav>
+
+  <footer>&copy; 2026 Joshua Stough<span class="js-only"> &middot; type <kbd>help</kbd>, or tap a
+      command</span></footer>
+
+  <script>
+    (function () {
+      var TARGETS = {
+        book: 'https://profstough.github.io/imageprocessing-awesome/',
+        colab: 'https://colab.research.google.com/github/profstough/imageprocessing-awesome/blob/main/colab_setup.ipynb',
+        source: 'https://github.com/profstough/imageprocessing-awesome',
+        teaching: 'https://profstough.github.io/',
+        research: 'https://joshuastough.com',
+        scholar: 'https://scholar.google.com/citations?user=JASM_10AAAAJ&hl=en',
+        github: 'https://github.com/joshuastough',
+        profstough: 'https://github.com/profstough',
+        email: 'mailto:joshua.stough@gmail.com',
+        coffee: 'https://www.buymeacoffee.com/joshuastough'
+      };
+      var FILES = { 'about.txt': 'about', 'links.txt': 'links', 'butterfly.png': null, 'projects/': 'projects' };
+      var HELP = [
+        ['whoami', 'who is this'],
+        ['cat about.txt', 'a few sentences about me'],
+        ['ls', 'list files'],
+        ['ls projects', 'the open textbook'],
+        ['cat links.txt', 'everywhere else I am'],
+        ['open <name>', Object.keys(TARGETS).join(', ')],
+        ['ascii', 'the butterfly, in characters'],
+        ['coffee', 'if you like what you see'],
+        ['theme [dark|light]', 'switch the screen'],
+        ['clear', 'clear the screen'],
+        ['history', 'commands you have run']
+      ];
+
+      var screen = document.getElementById('screen');
+      var historyEl = document.getElementById('history');
+      var log = document.getElementById('log');
+      var form = document.getElementById('prompt');
+      var input = document.getElementById('cmd');
+      var past = [], cursor = 0;
+      var still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      var now = new Date();
+      document.getElementById('motd').textContent = 'Last login: ' +
+        now.toDateString().slice(0, 10) + ' ' + now.toTimeString().slice(0, 5) + ' on ttys001';
+
+      function el(tag, cls, text) {
+        var e = document.createElement(tag);
+        if (cls) e.className = cls;
+        if (text != null) e.textContent = text;
+        return e;
+      }
+
+      function block(name) {
+        var src = document.querySelector('[data-out="' + name + '"]');
+        var copy = src.cloneNode(true);
+        copy.removeAttribute('data-out');
+        return copy;
+      }
+
+      function linkTo(url, text) {
+        var a = el('a', null, text || url.replace(/^mailto:|^https?:\/\//, ''));
+        a.href = url;
+        return a;
+      }
+
+      function echo(cmd) {
+        var line = el('p', 'line');
+        line.appendChild(el('span', 'ps1', 'jvs@stough'));
+        line.appendChild(document.createTextNode(':'));
+        line.appendChild(el('span', 'cwd', '~'));
+        line.appendChild(document.createTextNode('$ '));
+        line.appendChild(el('span', 'typed', cmd));
+        return line;
+      }
+
+      function openTarget(name, out) {
+        var url = TARGETS[name];
+        if (!url) {
+          out.appendChild(el('p', 'err', 'open: no such target: ' + name));
+          out.appendChild(el('p', 'dim', 'try one of: ' + Object.keys(TARGETS).join(', ')));
+          return;
+        }
+        var p = el('p', null, 'opening ');
+        p.appendChild(linkTo(url));
+        p.appendChild(document.createTextNode(' ...'));
+        out.appendChild(p);
+        setTimeout(function () { location.href = url; }, still ? 0 : 450);
+      }
+
+      function fileButton(name, cmd) {
+        var b = el('button', 'linklike', name);
+        b.type = 'button';
+        b.dataset.run = cmd;
+        return b;
+      }
+
+      var COMMANDS = {
+        help: function (args, out) {
+          var ul = el('ul', 'help');
+          HELP.forEach(function (h) {
+            var li = el('li');
+            li.appendChild(el('span', null, h[0]));
+            li.appendChild(el('span', 'note', '# ' + h[1]));
+            ul.appendChild(li);
+          });
+          out.appendChild(ul);
+        },
+        whoami: function (args, out) { out.appendChild(block('whoami')); },
+        ls: function (args, out) {
+          if (args[0] && /^(~\/)?projects\/?$/.test(args[args.length - 1])) {
+            out.appendChild(block('projects'));
+            return;
+          }
+          var row = el('p', 'cols');
+          row.appendChild(fileButton('about.txt', 'cat about.txt'));
+          row.appendChild(fileButton('butterfly.png', 'cat butterfly.png | ascii'));
+          row.appendChild(fileButton('links.txt', 'cat links.txt'));
+          row.appendChild(fileButton('projects/', 'ls projects'));
+          out.appendChild(row);
+        },
+        cat: function (args, out, raw) {
+          if (/\|\s*ascii\s*$/.test(raw)) { out.appendChild(block('ascii')); return; }
+          var name = args[0];
+          if (!name) { out.appendChild(el('p', 'err', 'cat: missing file name; try `cat about.txt`')); return; }
+          if (name === 'butterfly.png') {
+            out.appendChild(el('p', 'err', 'cat: butterfly.png: binary file; try `cat butterfly.png | ascii`'));
+            return;
+          }
+          if (!(name in FILES)) { out.appendChild(el('p', 'err', 'cat: ' + name + ': No such file')); return; }
+          if (name === 'projects/') { out.appendChild(el('p', 'err', 'cat: projects/: Is a directory')); return; }
+          out.appendChild(block(FILES[name]));
+        },
+        ascii: function (args, out) { out.appendChild(block('ascii')); },
+        open: function (args, out) {
+          if (!args[0]) {
+            out.appendChild(el('p', null, 'usage: open <name>'));
+            out.appendChild(el('p', 'dim', Object.keys(TARGETS).join(', ')));
+            return;
+          }
+          openTarget(args[0].toLowerCase(), out);
+        },
+        coffee: function (args, out) {
+          out.appendChild(el('p', null, '☕ brewing... thank you!'));
+          openTarget('coffee', out);
+        },
+        theme: function (args, out) {
+          var root = document.documentElement;
+          var dark = root.dataset.theme ? root.dataset.theme === 'dark' :
+            matchMedia('(prefers-color-scheme: dark)').matches;
+          var next = args[0] === 'dark' || args[0] === 'light' ? args[0] : (dark ? 'light' : 'dark');
+          root.dataset.theme = next;
+          out.appendChild(el('p', 'dim', 'theme: ' + (next === 'dark' ? 'phosphor' : 'paper')));
+        },
+        clear: function () {
+          historyEl.classList.add('cleared');
+          log.textContent = '';
+          return 'cleared';
+        },
+        history: function (args, out) {
+          past.forEach(function (c, i) { out.appendChild(el('p', null, String(i + 1).padStart(4) + '  ' + c)); });
+        },
+        pwd: function (args, out) { out.appendChild(el('p', null, '/home/jvs')); },
+        cd: function (args, out) {
+          out.appendChild(el('p', 'dim', 'cd: this is a one-room website; try `open teaching`'));
+        },
+        echo: function (args, out) { out.appendChild(el('p', null, args.join(' '))); },
+        date: function (args, out) { out.appendChild(el('p', null, new Date().toString())); },
+        sudo: function (args, out) {
+          out.appendChild(el('p', 'err', 'jvs is not in the sudoers file. This incident will be reported.'));
+        },
+        exit: function (args, out) { out.appendChild(el('p', 'dim', 'logout (not really). try `open research`')); }
+      };
+      COMMANDS.dir = COMMANDS.ls;
+      COMMANDS.cls = COMMANDS.clear;
+      COMMANDS.logout = COMMANDS.exit;
+      COMMANDS.man = COMMANDS.help;
+
+      function run(raw) {
+        raw = raw.trim();
+        if (!raw) {
+          log.appendChild(echo(''));
+          return;
+        }
+        past.push(raw);
+        cursor = past.length;
+        var parts = raw.split(/\s+/);
+        var name = parts[0].toLowerCase();
+        var fn = COMMANDS[name];
+        var out = el('div', 'out');
+        var entry = el('section', 'cmd');
+        if (fn && fn(parts.slice(1), out, raw) === 'cleared') return;
+        entry.appendChild(echo(raw));
+        if (!fn) {
+          out.appendChild(el('p', 'err', 'bash: ' + parts[0] + ': command not found'));
+          out.appendChild(el('p', 'dim', 'try `help`'));
+        }
+        if (out.childNodes.length) entry.appendChild(out);
+        log.appendChild(entry);
+      }
+
+      function reveal() {
+        form.scrollIntoView({ block: 'nearest', behavior: still ? 'auto' : 'smooth' });
+      }
+
+      form.addEventListener('submit', function (ev) {
+        ev.preventDefault();
+        run(input.value);
+        input.value = '';
+        reveal();
+      });
+
+      function completions(value) {
+        var m = value.match(/^(\S*)$/);
+        if (m) return Object.keys(COMMANDS).filter(function (c) { return c.indexOf(m[1]) === 0; });
+        m = value.match(/^(open|cat|ls)\s+(\S*)$/);
+        if (!m) return [];
+        var pool = m[1] === 'open' ? Object.keys(TARGETS) : Object.keys(FILES);
+        return pool.filter(function (c) { return c.indexOf(m[2]) === 0; }).map(function (c) {
+          return m[1] + ' ' + c;
+        });
+      }
+
+      input.addEventListener('keydown', function (ev) {
+        if (ev.key === 'Tab') {
+          var opts = completions(input.value);
+          if (!opts.length || !input.value) return; // let Tab move focus as usual
+          ev.preventDefault();
+          if (opts.length === 1) {
+            input.value = opts[0] + (/\/$/.test(opts[0]) ? '' : ' ');
+          } else {
+            var common = opts.reduce(function (a, b) {
+              var i = 0;
+              while (i < a.length && a[i] === b[i]) i++;
+              return a.slice(0, i);
+            });
+            if (common.length > input.value.length) input.value = common;
+            else {
+              var entry = el('section', 'cmd');
+              entry.appendChild(echo(input.value));
+              entry.appendChild(el('p', 'dim', opts.map(function (o) { return o.split(' ').pop(); }).join('   ')));
+              log.appendChild(entry);
+              reveal();
+            }
+          }
+        } else if (ev.key === 'ArrowUp' && cursor > 0) {
+          ev.preventDefault();
+          input.value = past[--cursor];
+        } else if (ev.key === 'ArrowDown') {
+          ev.preventDefault();
+          cursor = Math.min(past.length, cursor + 1);
+          input.value = past[cursor] || '';
+        } else if (ev.key === 'l' && ev.ctrlKey) {
+          ev.preventDefault();
+          run('clear');
+        }
+      });
+
+      // Clicking the screen focuses the prompt, unless the click was on a link or a text selection.
+      screen.addEventListener('click', function (ev) {
+        if (ev.target.closest('a, button') || String(getSelection())) return;
+        input.focus({ preventScroll: true });
+      });
+
+      document.addEventListener('click', function (ev) {
+        var b = ev.target.closest('[data-run]');
+        if (!b) return;
+        run(b.dataset.run);
+        reveal();
+        if (matchMedia('(pointer: fine)').matches) input.focus({ preventScroll: true });
+      });
+
+      var queued = new URLSearchParams(location.search).get('run');
+      if (queued) {
+        queued.split(',').forEach(run);
+        reveal();
+      }
+      if (matchMedia('(pointer: fine)').matches) input.focus({ preventScroll: true });
+    })();
+  </script>
+</body>
+
+</html>
