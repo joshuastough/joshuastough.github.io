@@ -140,8 +140,12 @@
 
     .top .name {
       color: var(--ink);
-      font-weight: 600;
+      font-weight: 500;
       text-decoration: none;
+    }
+
+    .top .name:hover {
+      color: var(--accent);
     }
 
     .top nav {
@@ -603,11 +607,9 @@
 
 <body>
   <header class="wrap top">
-    <a class="name" href="#top" id="top">Joshua Stough</a>
+    <a class="name mono" href="https://github.com/joshuastough">joshuastough@github</a>
     <nav aria-label="Site">
-      <a href="#book">Book</a>
-      <a href="https://profstough.github.io/">Teaching</a>
-      <a href="https://joshuastough.com">Research</a>
+      <a href="https://joshuastough.com">Research/Teaching</a>
       <a href="mailto:joshua.stough@gmail.com">Contact</a>
     </nav>
   </header>
@@ -620,11 +622,11 @@
       <div class="intro">
         <p class="eyebrow mono">computer scientist</p>
         <h1>Joshua Stough</h1>
-        <p class="lede">Computer scientist working on medical image analysis, and teaching everything from logic
-          gates to neural networks.</p>
+        <p class="lede">Working on medical image analysis, and teaching everything from logic gates to neural
+          networks.</p>
         <p class="actions">
-          <a class="btn" href="https://joshuastough.com">joshuastough.com</a>
-          <a class="btn" href="https://profstough.github.io/">profstough</a>
+          <a class="btn" href="https://joshuastough.com">Bucknell</a>
+          <a class="btn" href="https://profstough.github.io/">profstough@github</a>
           <a class="btn" href="https://scholar.google.com/citations?user=JASM_10AAAAJ&amp;hl=en">Google Scholar</a>
         </p>
       </div>
@@ -948,7 +950,7 @@
           caption.appendChild(a);
         }
         figtext.textContent = plain ? pick.caption :
-          'Left of the divider: the original. Right: ' + op.label.toLowerCase() + ', computed in your browser.';
+          'Left of the divider: the original. Right: ' + op.label.toLowerCase() + '.';
         canvas.setAttribute('aria-label', plain ? pick.alt :
           pick.alt + ', with ' + op.label.toLowerCase() + ' applied right of a divider at ' +
           Math.round(wipe * 100) + ' percent');

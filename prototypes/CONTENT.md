@@ -5,7 +5,7 @@ Edit here first, then carry the change into each page.
 
 ## Name and one-liner
 **Joshua Stough**
-Computer scientist working on medical image analysis, and teaching everything from logic gates to neural networks.
+Working on medical image analysis, and teaching everything from logic gates to neural networks.
 
 ## Bio
 I'm Joshua Stough, a computer scientist and teacher at Bucknell University. I teach systems courses, from logic gates
