@@ -17,7 +17,9 @@
       if (t === 'dark' || t === 'light') document.documentElement.dataset.theme = t;
       document.documentElement.classList.add('js');
     })();
+    var LAB_ROOT = '../'; // path from this page to the site root
   </script>
+  <script src="../assets/lab/pictures.js"></script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -231,19 +233,38 @@
 
     .stage {
       position: relative;
+      width: fit-content;
+      max-width: 100%;
+      margin: 0 auto;
       touch-action: pan-y;
       user-select: none;
       -webkit-user-select: none;
       line-height: 0;
     }
 
+    /* Any shape of picture: full column width, but never taller than the screen */
+    .stage img,
+    .stage canvas {
+      width: auto;
+      max-width: 100%;
+      height: auto;
+      max-height: min(78vh, 720px);
+    }
+
     .stage canvas {
       display: none;
-      width: 100%;
       cursor: ew-resize;
     }
 
-    .stage.ready img {
+    #photo {
+      display: none;
+    }
+
+    .js #photo {
+      display: block;
+    }
+
+    .js .stage.ready #photo {
       display: none;
     }
 
@@ -358,7 +379,11 @@
     }
 
     .label {
-      margin: 0 0 10px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px 8px;
+      margin: 0 0 12px;
       color: var(--muted);
       font-size: 13px;
       font-weight: 500;
@@ -506,6 +531,21 @@
       color: var(--accent);
     }
 
+    /* The three links under the intro fit on one row beside the picture */
+    .intro .actions {
+      gap: 8px;
+    }
+
+    .intro .btn {
+      padding: 9px 12px;
+    }
+
+    .btn-sm {
+      padding: 4px 10px;
+      font-size: 13px;
+      letter-spacing: 0;
+    }
+
     .btn.primary {
       background: var(--accent);
       border-color: var(--accent);
@@ -515,32 +555,6 @@
     .btn.primary:hover {
       color: var(--accent-ink);
       filter: brightness(1.08);
-    }
-
-    .index {
-      margin: 0;
-      padding: 0;
-      list-style: none;
-      border-top: 1px solid var(--line);
-    }
-
-    .index li {
-      display: grid;
-      grid-template-columns: 9ch minmax(0, 1fr) minmax(0, 1fr);
-      gap: 4px 20px;
-      align-items: baseline;
-      padding: 11px 0;
-      border-bottom: 1px solid var(--line);
-    }
-
-    .index .k {
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    .index .note {
-      color: var(--muted);
-      font-size: 15px;
     }
 
     footer {
@@ -577,13 +591,6 @@
         margin-bottom: 12px;
       }
 
-      .index li {
-        grid-template-columns: 9ch minmax(0, 1fr);
-      }
-
-      .index .note {
-        grid-column: 2;
-      }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -601,7 +608,7 @@
       <a href="#book">Book</a>
       <a href="https://profstough.github.io/">Teaching</a>
       <a href="https://joshuastough.com">Research</a>
-      <a href="#elsewhere">Contact</a>
+      <a href="mailto:joshua.stough@gmail.com">Contact</a>
     </nav>
   </header>
   <div class="wrap">
@@ -615,13 +622,37 @@
         <h1>Joshua Stough</h1>
         <p class="lede">Computer scientist working on medical image analysis, and teaching everything from logic
           gates to neural networks.</p>
+        <p class="actions">
+          <a class="btn" href="https://joshuastough.com">joshuastough.com</a>
+          <a class="btn" href="https://profstough.github.io/">profstough</a>
+          <a class="btn" href="https://scholar.google.com/citations?user=JASM_10AAAAJ&amp;hl=en">Google Scholar</a>
+        </p>
       </div>
 
       <figure class="specimen">
         <div class="frame">
           <div class="stage" id="stage">
-            <img id="photo" src="../assets/butterfly.webp" width="900" height="736"
-              alt="An orange and black butterfly resting on a gray panel with rectangular cutouts showing green leaves">
+            <img id="photo" alt="" width="900" height="736">
+            <script>
+              // Pick this visit's picture (see assets/lab/pictures.js) before the page first paints.
+              (function () {
+                var pics = window.LAB_PICTURES || [], q = new URLSearchParams(location.search).get('img'), pick;
+                if (q) {
+                  var word = q.toLowerCase();
+                  pick = /^\d+$/.test(q) ? pics[+q] :
+                    pics.filter(function (p) { return p.src.toLowerCase().indexOf(word) >= 0; })[0] ||
+                    pics.filter(function (p) { return p.alt.toLowerCase().indexOf(word) >= 0; })[0];
+                }
+                pick = window.LAB_PICK = pick || pics[Math.floor(Math.random() * pics.length)];
+                var img = document.getElementById('photo');
+                img.width = pick.w;
+                img.height = pick.h;
+                img.alt = pick.alt;
+                img.src = LAB_ROOT + pick.src;
+              })();
+            </script>
+            <noscript><img src="../assets/butterfly.webp" width="900" height="736"
+                alt="An orange and black butterfly resting on a gray panel with rectangular cutouts showing green leaves"></noscript>
             <canvas id="canvas" width="900" height="736" role="img"></canvas>
             <span class="tag left" id="tag-left">Original</span>
             <span class="tag right" id="tag-right"></span>
@@ -635,7 +666,9 @@
       </figure>
 
       <div class="controls" id="controls" hidden>
-        <p class="label mono" id="ops-label">Process the picture, right in your browser</p>
+        <p class="label mono"><span id="ops-label">Process the picture, right in your browser.</span>
+          Learn about it at <a class="btn btn-sm" href="https://profstough.github.io/imageprocessing-awesome/">DIP in
+            Python</a></p>
         <div class="ops" role="group" aria-labelledby="ops-label" id="ops"></div>
         <div class="param mono" id="param-row">
           <label for="param" id="param-name">Gain</label>
@@ -671,24 +704,6 @@
       </article>
     </section>
 
-    <section class="wrap section" id="elsewhere" aria-labelledby="else-h">
-      <h2 class="mono" id="else-h">&sect;3 Elsewhere</h2>
-      <ul class="index">
-        <li><span class="k mono">teaching</span><a href="https://profstough.github.io/">profstough.github.io</a><span
-            class="note">Courses and open materials</span></li>
-        <li><span class="k mono">research</span><a href="https://joshuastough.com">joshuastough.com</a><span
-            class="note">Medical image analysis, students, CV</span></li>
-        <li><span class="k mono">scholar</span><a
-            href="https://scholar.google.com/citations?user=JASM_10AAAAJ&amp;hl=en">Google Scholar</a><span
-            class="note">Publications</span></li>
-        <li><span class="k mono">github</span><a href="https://github.com/joshuastough">@joshuastough</a><span
-            class="note">Personal projects</span></li>
-        <li><span class="k mono">github</span><a href="https://github.com/profstough">@profstough</a><span
-            class="note">Teaching materials</span></li>
-        <li><span class="k mono">email</span><a href="mailto:joshua.stough@gmail.com">joshua.stough@gmail.com</a><span
-            class="note"></span></li>
-      </ul>
-    </section>
   </main>
 
   <footer class="wrap">
@@ -704,7 +719,7 @@
       var OPS = [
         {
           id: 'original', label: 'Original',
-          text: 'The photograph as taken: 900 × 736 pixels, 8 bits per color channel.'
+          text: 'The photograph as taken: {size} pixels, 8 bits per color channel.'
         },
         {
           id: 'sampling', label: 'Sampling', name: 'Block', min: 2, max: 40, step: 1, value: 12, unit: ' px',
@@ -753,6 +768,7 @@
       var figtext = document.getElementById('figtext');
 
       var query = new URLSearchParams(location.search);
+      var pick = window.LAB_PICK;
       var W, H, N, ctx, src, out, lum, smooth, bufA, bufB, err;
       var op = OPS[4], value = op.value, wipe = 0.5, pending = 0, dragging = false;
 
@@ -924,18 +940,17 @@
           paramOut.textContent = fmt(value);
           tagRight.textContent = op.label;
         }
-        caption.textContent = op.text + ' ';
+        caption.textContent = op.text.replace('{size}', W + ' \u00d7 ' + H) + ' ';
         if (op.slug) {
           var a = document.createElement('a');
           a.href = BOOK + op.slug + '/';
           a.textContent = op.chapter + ' →';
           caption.appendChild(a);
         }
-        figtext.textContent = plain ? 'Butterfly on a perforated panel.' :
+        figtext.textContent = plain ? pick.caption :
           'Left of the divider: the original. Right: ' + op.label.toLowerCase() + ', computed in your browser.';
-        canvas.setAttribute('aria-label', plain ?
-          'An orange and black butterfly resting on a gray panel with rectangular cutouts showing green leaves' :
-          'The butterfly photograph with ' + op.label.toLowerCase() + ' applied right of a divider at ' +
+        canvas.setAttribute('aria-label', plain ? pick.alt :
+          pick.alt + ', with ' + op.label.toLowerCase() + ' applied right of a divider at ' +
           Math.round(wipe * 100) + ' percent');
         schedule(1);
       }
