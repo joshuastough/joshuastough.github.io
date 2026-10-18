@@ -19,4 +19,5 @@ and paste the entry it prints into `assets/lab/pictures.js`, adding alt text and
 
 ### Previewing
 - `tools/serve.sh` serves the site at http://localhost:8000/.
+- `fonts-preview.html` shows the real page side by side in other text fonts (Newsreader is the one in use).
 - `python3 -I tools/shoot.py OUTDIR` takes headless-Chrome screenshots at desktop and phone widths, in light and dark, and flags horizontal overflow.

@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Font Samples</title>
+  <style>
+    :root {
+      --bg: #f4f4f1;
+      --card: #ffffff;
+      --ink: #18191b;
+      --muted: #5a5e66;
+      --line: #dddcd5;
+      --accent: #1d5bc6;
+      color-scheme: light;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --bg: #111214;
+        --card: #1a1c1f;
+        --ink: #eceef0;
+        --muted: #a0a6ae;
+        --line: #2d3136;
+        --accent: #86b4ff;
+        color-scheme: dark;
+      }
+    }
+
+    :root[data-theme="dark"] {
+      --bg: #111214;
+      --card: #1a1c1f;
+      --ink: #eceef0;
+      --muted: #a0a6ae;
+      --line: #2d3136;
+      --accent: #86b4ff;
+      color-scheme: dark;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font: 400 15px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif;
+    }
+
+    a {
+      color: var(--accent);
+    }
+
+    .wrap {
+      max-width: 1340px;
+      margin: 0 auto;
+      padding: 28px 16px 48px;
+    }
+
+    h1 {
+      margin: 0 0 6px;
+      font-size: 1.6rem;
+    }
+
+    .intro {
+      margin: 0 0 22px;
+      max-width: 60em;
+      color: var(--muted);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(640px, 1fr));
+      gap: 18px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .card header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 4px 12px;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .card h2 {
+      margin: 0;
+      font-size: 1.05rem;
+    }
+
+    .card .note {
+      flex: 1;
+      color: var(--muted);
+    }
+
+    .viewport {
+      width: 640px;
+      height: 560px;
+      overflow: hidden;
+    }
+
+    .viewport iframe {
+      width: 1280px;
+      height: 1120px;
+      border: 0;
+      transform: scale(0.5);
+      transform-origin: 0 0;
+    }
+
+    /* ?font=key: one candidate, full size */
+    .solo {
+      position: fixed;
+      inset: 0;
+    }
+
+    .solo iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    .solo .badge {
+      position: fixed;
+      right: 12px;
+      bottom: 12px;
+      padding: 8px 12px;
+      border-radius: 8px;
+      background: rgba(10, 12, 14, 0.82);
+      color: #fff;
+      font-size: 14px;
+    }
+
+    .solo .badge a {
+      color: #9cc3ff;
+      margin-left: 10px;
+    }
+
+    @media (max-width: 700px) {
+      .grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .viewport {
+        width: 100%;
+        height: 300px;
+      }
+
+      .viewport iframe {
+        transform: scale(0.27);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <script>
+    // The real page with its text font swapped, for comparing typefaces (Newsreader was chosen 2026-10-18).
+    // Mono parts (header name, lab controls, labels, buttons) keep IBM Plex Mono in every sample.
+    var FONTS = [
+      {
+        key: 'plex', name: 'IBM Plex Sans (before)', note: 'Plex Mono’s sibling: same skeleton, which is why the two feel close.',
+        css: 'https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&display=swap',
+        family: '"IBM Plex Sans", system-ui, sans-serif', h1: [600, '-0.025em'], h3: 600
+      },
+      {
+        key: 'newsreader', name: 'Newsreader (current)', note: 'Editorial serif made for screens; a scientist’s-notebook pairing with the mono.',
+        css: 'https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&display=swap',
+        family: '"Newsreader", Georgia, serif', h1: [500, '-0.015em'], h3: 500
+      },
+      {
+        key: 'sourceserif', name: 'Source Serif 4', note: 'Classic academic serif: steady, very readable at paragraph sizes.',
+        css: 'https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap',
+        family: '"Source Serif 4", Georgia, serif', h1: [600, '-0.02em'], h3: 600
+      },
+      {
+        key: 'figtree', name: 'Figtree', note: 'Friendly, rounded geometric sans; clearly not a typewriter.',
+        css: 'https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&display=swap',
+        family: '"Figtree", system-ui, sans-serif', h1: [700, '-0.025em'], h3: 600
+      },
+      {
+        key: 'bricolage', name: 'Bricolage Grotesque', note: 'Sans with personality; its display sizes get quirky and warm.',
+        css: 'https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&display=swap',
+        family: '"Bricolage Grotesque", system-ui, sans-serif', h1: [650, '-0.03em'], h3: 600
+      }
+    ];
+    var PAGE = 'index.html?img=0&op=edges';
+    var q = new URLSearchParams(location.search);
+    var theme = q.get('theme');
+    if (theme === 'dark' || theme === 'light') document.documentElement.dataset.theme = theme;
+    var themeArg = theme ? '&theme=' + theme : '';
+
+    function restyle(frame, f) {
+      frame.addEventListener('load', function () {
+        var d = frame.contentDocument;
+        if (f.css) {
+          var link = d.createElement('link');
+          link.rel = 'stylesheet';
+          link.href = f.css;
+          d.head.appendChild(link);
+        }
+        var style = d.createElement('style');
+        // font-size-adjust evens out x-heights, so each font is compared at the same apparent size.
+        style.textContent =
+          'body { font-family: ' + f.family + ' !important; font-size-adjust: 0.516; }' +
+          'h1 { font-size-adjust: none; font-weight: ' + f.h1[0] + ' !important; letter-spacing: ' + f.h1[1] + ' !important; }' +
+          '.card h3 { font-weight: ' + f.h3 + ' !important; }';
+        d.head.appendChild(style);
+      });
+    }
+
+    function frameFor(f) {
+      var frame = document.createElement('iframe');
+      frame.title = f.name + ' sample';
+      restyle(frame, f);
+      frame.src = PAGE + themeArg;
+      return frame;
+    }
+  </script>
+
+  <main class="wrap" id="main">
+    <h1>Font samples</h1>
+    <p class="intro">The real page, with its text font (name, blurbs, captions, card, footer) in each candidate. The
+      monospace parts stay IBM Plex Mono throughout. Same picture and operation in each, sized so their x-heights
+      match (the name keeps each font's natural size). Scroll inside a sample to see the About and textbook sections; <b>Full size</b> opens one on its own.
+      Add <code>?theme=dark</code> to compare in dark mode.</p>
+    <div class="grid" id="grid"></div>
+  </main>
+
+  <script>
+    (function () {
+      var only = FONTS.filter(function (f) { return f.key === q.get('font'); })[0];
+      if (only) {
+        document.getElementById('main').remove();
+        var solo = document.createElement('div');
+        solo.className = 'solo';
+        solo.appendChild(frameFor(only));
+        var badge = document.createElement('div');
+        badge.className = 'badge';
+        badge.innerHTML = '<b></b><a href="fonts-preview.html' + (theme ? '?theme=' + theme : '') + '">all samples</a>';
+        badge.querySelector('b').textContent = only.name;
+        solo.appendChild(badge);
+        document.body.appendChild(solo);
+        return;
+      }
+      var grid = document.getElementById('grid');
+      FONTS.forEach(function (f) {
+        var card = document.createElement('section');
+        card.className = 'card';
+        var head = document.createElement('header');
+        var h2 = document.createElement('h2');
+        h2.textContent = f.name;
+        var note = document.createElement('span');
+        note.className = 'note';
+        note.textContent = f.note;
+        var full = document.createElement('a');
+        full.href = '?font=' + f.key + themeArg;
+        full.textContent = 'Full size';
+        head.append(h2, note, full);
+        var vp = document.createElement('div');
+        vp.className = 'viewport';
+        vp.appendChild(frameFor(f));
+        card.append(head, vp);
+        grid.appendChild(card);
+      });
+    })();
+  </script>
+</body>
+
+</html>
